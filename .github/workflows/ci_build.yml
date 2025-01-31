@@ -36,6 +36,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         imageName: ghcr.io/stuartleeks/az-apim-trace-devcontainer
+        cacheFrom: ghcr.io/stuartleeks/az-apim-trace-devcontainer
         runCmd: |
           make build-wheel
         env: |
