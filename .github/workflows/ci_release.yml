@@ -1,5 +1,10 @@
 name: release
 
+#
+# NOTE TO SELF: Ensure that the version in setup.py is updated prior to making a release
+# ALSO:         After making the release, update the README install steps to reference the new version
+#
+
 on:
   workflow_dispatch:
 

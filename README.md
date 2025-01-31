@@ -13,9 +13,15 @@ This repository contains an extension for the Azure CLI (`az`) for working with 
 
 ## Installation
 
-Currently there is no package published for this extension so you will need to build it yourself.
+The repository has a GitHub release that contains a wheel file for the extension.
+To install directly from GitHub, run the following command:
 
-To build the extension, run `make build-wheel` from the root of the project repo.
+```bash
+# Download and install from the GitHub release
+az extension add --source https://github.com/stuartleeks/az-apim-trace/releases/download/v0.0.1/apim_trace-0.0.1-py2.py3-none-any.whl
+```
+
+If you prefer to build the extension yourself, run `make build-wheel` from the root of the project repo.
 The repo contains a VS Code dev container that has all the required dependencies installed.
 
 After building the extension, you can install it using `make add-extension`.
