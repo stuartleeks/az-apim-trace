@@ -19,7 +19,7 @@ To install directly from GitHub, run the following command:
 
 ```bash
 # Download and install from the GitHub release
-az extension add --source https://github.com/stuartleeks/az-apim-trace/releases/download/v0.0.1/apim_trace-0.0.1-py2.py3-none-any.whl
+az extension add --source https://github.com/stuartleeks/az-apim-trace/releases/download/v0.0.2/apim_trace-0.0.2-py2.py3-none-any.whl --upgrade
 ```
 
 If you prefer to build the extension yourself, run `make build-wheel` from the root of the project repo.
