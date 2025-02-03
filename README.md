@@ -10,6 +10,9 @@ This repository contains an extension for the Azure CLI (`az`) for working with 
 		- [`az apim api trace get-token`](#az-apim-api-trace-get-token)
 		- [`az apim api trace invoke`](#az-apim-api-trace-invoke)
 			- [--headers](#--headers)
+	- [CHANGELOG](#changelog)
+		- [0.0.2 - 2025-02-03](#002---2025-02-03)
+		- [0.0.1 - 2025-01-31](#001---2025-01-31)
 
 
 ## Installation
@@ -91,5 +94,14 @@ You can also specify headers as a JSON object:
 az apim api trace ... --headers '{"Content-Type": "application/json", "Accept": "application/json"}'
 ```
 
+## CHANGELOG
+
+### 0.0.2 - 2025-02-03
+
+- Add support for specifying headers in the `az apim api trace invoke` command
+
+### 0.0.1 - 2025-01-31
+
+- Initial release
 
 
