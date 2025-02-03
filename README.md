@@ -9,6 +9,7 @@ This repository contains an extension for the Azure CLI (`az`) for working with 
 	- [Usage](#usage)
 		- [`az apim api trace get-token`](#az-apim-api-trace-get-token)
 		- [`az apim api trace invoke`](#az-apim-api-trace-invoke)
+			- [--headers](#--headers)
 
 
 ## Installation
@@ -63,5 +64,32 @@ The command has the following parameters:
 | `--method`              | [Required] The HTTP method to use when calling the API.                   |
 | `--url`                 | [Required] The URL to call.                                               |
 | `--trace-output`        | [Required] The file to write the trace output to.                         |
+| `--headers`             | [Optional] Headers to include in the request (see below).                 |
 
 The command will get a trace token for the specified API, call the API specified by `--url` and `--method` attaching the trace token as a header, and write the resulting trace to the file specified by `--trace-output`.
+
+#### --headers
+
+The `--headers` parameter can be used to specify headers to include in the request.
+The syntax is similar to the `az rest` command.
+
+For example, to include a `Content-Type` header you can use the `key=value` form:
+
+```bash
+az apim api trace ... --headers "Content-Type=application/json"
+```
+
+To include multiple headers, separate them with spaces:
+
+```bash
+az apim api trace ... --headers "Content-Type=application/json" "Accept=application/json"
+```
+
+You can also specify headers as a JSON object:
+
+```bash
+az apim api trace ... --headers '{"Content-Type": "application/json", "Accept": "application/json"}'
+```
+
+
+

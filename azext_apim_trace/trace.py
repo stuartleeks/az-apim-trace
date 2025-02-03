@@ -3,10 +3,12 @@ import sys
 import requests
 from knack.help_files import helps
 from knack.log import get_logger
+from knack.util import CLIError
+from requests.structures import CaseInsensitiveDict
 
 from azure.cli.core._profile import Profile
 from azure.cli.core.commands.transform import unregister_global_transforms
-from azure.cli.core.util import send_raw_request
+from azure.cli.core.util import send_raw_request, shell_safe_json_parse
 import webbrowser
 
 logger = get_logger(__name__)
@@ -68,12 +70,26 @@ def call_with_trace(cmd, url, resource_group_name: str,
                     trace_output_file: str,
                     subscription_id: str | None = None,
                     method=None,
-                    # headers=None,
+                    headers=None,
                     # uri_parameters=None,
                     body=None,
                     output_file=None):
-    # No transform should be performed on `az rest`.
-    unregister_global_transforms(cmd.cli_ctx)
+    # No transform should be performed on `az rest` so replicate that here.
+    # unregister_global_transforms(cmd.cli_ctx)
+
+    # NOTE: headers has nargs set when the argument is registered which means it will be a list
+    # send_raw_requests also allows a single item with a JSON-ish encoded object
+    # We need to add the Apim-Debug-Authorization header with the token
+    # so we need to do the same parsing that send_raw_request does to be able to add the header
+    result = CaseInsensitiveDict()
+    for s in headers or []:
+        try:
+            temp = shell_safe_json_parse(s)
+            result.update(temp)
+        except CLIError:
+            key, value = s.split('=', 1)
+            result[key] = value
+    headers = [f"{k}={v}" for k,v in result.items()]
 
     if subscription_id is None:
         subscription_id = _get_default_subscription_id(cmd)
@@ -86,7 +102,7 @@ def call_with_trace(cmd, url, resource_group_name: str,
     skip_authorization_header = True
     resource = None
     uri_parameters = None
-    headers = [f"Apim-Debug-Authorization={token}"]
+    headers.append(f"Apim-Debug-Authorization={token}")
     r: requests.Response = send_raw_request(cmd.cli_ctx, method, url, headers, uri_parameters, body,
                                             skip_authorization_header, resource, output_file)
     trace_id = r.headers.get("Apim-Trace-Id")

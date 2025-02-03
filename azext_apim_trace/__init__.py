@@ -46,6 +46,21 @@ class ApimExportCommandsLoader(AzCommandsLoader):
                 help='API identifier. Must be unique in the current API Management service instance. Non-current revision has ;rev=n as a suffix where n is the revision number.'
             )
 
+        with self.argument_context('apim api trace invoke') as c:
+            c.argument('service_name',
+                       options_list=['--service-name'],
+                       help='Name of the API Management service'
+                       )
+            c.argument(
+                'api-id',
+                options_list=['--api-id'],
+                help='API identifier. Must be unique in the current API Management service instance. Non-current revision has ;rev=n as a suffix where n is the revision number.'
+            )
+
+
+            c.argument('headers', nargs='+',
+                        help="Space-separated headers in KEY=VALUE format or JSON string. Use @{file} to load from a file")
+
         for m in modules:
             if hasattr(m, 'load_arguments'):
                 m.load_arguments(self, command)
