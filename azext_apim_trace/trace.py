@@ -71,14 +71,54 @@ def call_with_trace(cmd, url, resource_group_name: str,
                     subscription_id: str | None = None,
                     method=None,
                     headers=None,
-                    # uri_parameters=None,
                     body=None,
                     output_file=None):
-    # No transform should be performed on `az rest` so replicate that here.
-    # unregister_global_transforms(cmd.cli_ctx)
 
+    #
+    # Get trace token
+    #
+    if subscription_id is None:
+        subscription_id = _get_default_subscription_id(cmd)
+        logger.debug(f"Using subscription {subscription_id}")
+    token_result = get_trace_token(
+        cmd, resource_group_name, service_name, api_id, subscription_id)
+    token = token_result["token"]
+
+    #
+    # Make API request
+    #
+    headers = _normalize_headers(headers)
+    headers["Apim-Debug-Authorization"]= token
+    r = requests.request(method, url, headers=headers, data=body)
+    if output_file:
+        with open(output_file, 'wb') as fd:
+            for chunk in r.iter_content(chunk_size=128):
+                fd.write(chunk)
+
+    if not output_file and r.content:
+        try:
+            return r.json()
+        except ValueError:
+            logger.warning('Not a json response, outputting to stdout. For binary data '
+                           'suggest use "--output-file" to write to a file')
+            print(r.text)
+
+    #
+    # Get trace
+    #
+    trace_id = r.headers.get("Apim-Trace-Id")
+    if trace_id:
+        trace = _get_trace(cmd, subscription_id,
+                           resource_group_name, service_name, trace_id)
+        with open(trace_output_file, "w") as f:
+            f.write(json.dumps(trace, indent=4))
+        webbrowser.open(trace_output_file)
+
+    return None
+
+def _normalize_headers(headers):
     # NOTE: headers has nargs set when the argument is registered which means it will be a list
-    # send_raw_requests also allows a single item with a JSON-ish encoded object
+    # `az rest` also allows a single item with a JSON-ish encoded object, so we'll do the same
     # We need to add the Apim-Debug-Authorization header with the token
     # so we need to do the same parsing that send_raw_request does to be able to add the header
     result = CaseInsensitiveDict()
@@ -89,38 +129,8 @@ def call_with_trace(cmd, url, resource_group_name: str,
         except CLIError:
             key, value = s.split('=', 1)
             result[key] = value
-    headers = [f"{k}={v}" for k,v in result.items()]
-
-    if subscription_id is None:
-        subscription_id = _get_default_subscription_id(cmd)
-        logger.debug(f"Using subscription {subscription_id}")
-
-    token_result = get_trace_token(
-        cmd, resource_group_name, service_name, api_id, subscription_id)
-    token = token_result["token"]
-
-    skip_authorization_header = True
-    resource = None
-    uri_parameters = None
-    headers.append(f"Apim-Debug-Authorization={token}")
-    r: requests.Response = send_raw_request(cmd.cli_ctx, method, url, headers, uri_parameters, body,
-                                            skip_authorization_header, resource, output_file)
-    trace_id = r.headers.get("Apim-Trace-Id")
-    if trace_id:
-        trace = _get_trace(cmd, subscription_id,
-                           resource_group_name, service_name, trace_id)
-        with open(trace_output_file, "w") as f:
-            f.write(json.dumps(trace, indent=4))
-        webbrowser.open(trace_output_file)
-
-    if not output_file and r.content:
-        try:
-            return r.json()
-        except ValueError:
-            logger.warning('Not a json response, outputting to stdout. For binary data '
-                           'suggest use "--output-file" to write to a file')
-            print(r.text)
-    return None
+    headers = result
+    return headers
 
 
 def _get_default_subscription_id(cmd):
