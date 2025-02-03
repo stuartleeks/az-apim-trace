@@ -32,7 +32,7 @@ def get_trace_token(
         subscription_id: str | None = None,
 ):
     print(
-        '** NOTE: this extension is experimental, not supported, and may not work as expected! **', sys.stderr)
+        '** NOTE: this extension is experimental, not supported, and may not work as expected! **', file=sys.stderr)
 
     # Couldn't find an SDK method to get the trace token, so using raw request
     # Want POST https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/gateways/managed/listDebugCredentials?api-version=2023-05-01-preview
