@@ -8,9 +8,11 @@ This repository contains an extension for the Azure CLI (`az`) for working with 
 	- [Installation](#installation)
 	- [Usage](#usage)
 		- [`az apim api trace get-token`](#az-apim-api-trace-get-token)
+		- [`az apim api trace show`](#az-apim-api-trace-show)
 		- [`az apim api trace invoke`](#az-apim-api-trace-invoke)
 			- [--headers](#--headers)
 	- [CHANGELOG](#changelog)
+	- [vNext](#vnext)
 		- [0.0.3 - 2025-02-03](#003---2025-02-03)
 		- [0.0.2 - 2025-02-03](#002---2025-02-03)
 		- [0.0.1 - 2025-01-31](#001---2025-01-31)
@@ -54,9 +56,9 @@ The command has the following parameters:
 
 The command returns a JSON object with a `token` property that contains the trace token.
 
-### `az apim api trace invoke`
+### `az apim api trace show`
 
-This command calls an API in APIM with a trace token and downloads the resulting trace.
+Display a trace from an API Management service API call.
 
 The command has the following parameters:
 
@@ -64,11 +66,25 @@ The command has the following parameters:
 | ----------------------- | ------------------------------------------------------------------------- |
 | `--resource-group`/`-g` | [Required] The name of the resource group that contains the APIM service. |
 | `--service-name`        | [Required] The name of the APIM service.                                  |
-| `--api-id`              | [Required] The ID of the API to trace.                                    |
-| `--method`              | [Required] The HTTP method to use when calling the API.                   |
-| `--url`                 | [Required] The URL to call.                                               |
-| `--trace-output`        | [Required] The file to write the trace output to.                         |
-| `--headers`             | [Optional] Headers to include in the request (see below).                 |
+| `--trace-id`            | [Required] The ID of the trace to display.                                |
+
+### `az apim api trace invoke`
+
+This command calls an API in APIM with a trace token and downloads the resulting trace.
+This command can be thought of as a combination of `azi apim api trace get-token`, `curl`, and `az apim api trace show`.
+
+The command has the following parameters:
+
+| Name                    | Description                                                                 |
+| ----------------------- | --------------------------------------------------------------------------- |
+| `--resource-group`/`-g` | [Required] The name of the resource group that contains the APIM service.   |
+| `--service-name`        | [Required] The name of the APIM service.                                    |
+| `--api-id`              | [Required] The ID of the API to trace.                                      |
+| `--method`              | [Optional] The HTTP method to use when calling the API (default: `GET`).    |
+| `--url`                 | [Required] The URL to call.                                                 |
+| `--trace-output`        | [Required] The file to write the trace output to.                           |
+| `--headers`             | [Optional] Headers to include in the request (see below).                   |
+| `--insecure`            | [Optional] Allow insecure server connections when calling the API endpoint. |
 
 The command will get a trace token for the specified API, call the API specified by `--url` and `--method` attaching the trace token as a header, and write the resulting trace to the file specified by `--trace-output`.
 
@@ -77,10 +93,11 @@ The command will get a trace token for the specified API, call the API specified
 The `--headers` parameter can be used to specify headers to include in the request.
 The syntax is similar to the `az rest` command.
 
-For example, to include a `Content-Type` header you can use the `key=value` form:
+For example, to include a `Content-Type` header you can use the `key=value` or `key:value` form:
 
 ```bash
 az apim api trace ... --headers "Content-Type=application/json"
+az apim api trace ... --headers "Content-Type:application/json"
 ```
 
 To include multiple headers, separate them with spaces:
@@ -96,6 +113,12 @@ az apim api trace ... --headers '{"Content-Type": "application/json", "Accept": 
 ```
 
 ## CHANGELOG
+
+## vNext
+
+- Add `az apim api trace show` command
+- Add missing help text for commands
+- Allow `key:value` format for headers in `az apim api trace invoke` command
 
 ### 0.0.3 - 2025-02-03
 
