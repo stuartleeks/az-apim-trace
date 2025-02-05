@@ -12,8 +12,8 @@ This repository contains an extension for the Azure CLI (`az`) for working with 
 		- [`az apim api trace invoke`](#az-apim-api-trace-invoke)
 			- [--headers](#--headers)
 	- [CHANGELOG](#changelog)
-	- [vNext](#vnext)
-	- [0.0.4 - 2025-02-05](#004---2025-02-05)
+		- [vNext](#vnext)
+		- [0.0.4 - 2025-02-05](#004---2025-02-05)
 		- [0.0.3 - 2025-02-03](#003---2025-02-03)
 		- [0.0.2 - 2025-02-03](#002---2025-02-03)
 		- [0.0.1 - 2025-01-31](#001---2025-01-31)
@@ -26,7 +26,7 @@ To install directly from GitHub, run the following command:
 
 ```bash
 # Download and install from the GitHub release
-az extension add --source https://github.com/stuartleeks/az-apim-trace/releases/download/v0.0.3/apim_trace-0.0.3-py2.py3-none-any.whl --upgrade
+az extension add --source https://github.com/stuartleeks/az-apim-trace/releases/download/v0.0.4/apim_trace-0.0.4-py2.py3-none-any.whl --upgrade
 ```
 
 If you prefer to build the extension yourself, run `make build-wheel` from the root of the project repo.
@@ -115,11 +115,11 @@ az apim api trace ... --headers '{"Content-Type": "application/json", "Accept": 
 
 ## CHANGELOG
 
-## vNext
+### vNext
 
 - TODO
 
-## 0.0.4 - 2025-02-05
+### 0.0.4 - 2025-02-05
 
 - Add `az apim api trace show` command
 - Add missing help text for commands
