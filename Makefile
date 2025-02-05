@@ -5,4 +5,4 @@ build-wheel:
 
 
 add-extension:
-	az extension add --source ./dist/apim_trace-0.0.3-py2.py3-none-any.whl --yes --upgrade
+	az extension add --source ./dist/apim_trace-0.0.4-py2.py3-none-any.whl --yes --upgrade

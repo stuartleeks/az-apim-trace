@@ -13,6 +13,7 @@ This repository contains an extension for the Azure CLI (`az`) for working with 
 			- [--headers](#--headers)
 	- [CHANGELOG](#changelog)
 	- [vNext](#vnext)
+	- [0.0.4 - 2025-02-05](#004---2025-02-05)
 		- [0.0.3 - 2025-02-03](#003---2025-02-03)
 		- [0.0.2 - 2025-02-03](#002---2025-02-03)
 		- [0.0.1 - 2025-01-31](#001---2025-01-31)
@@ -115,6 +116,10 @@ az apim api trace ... --headers '{"Content-Type": "application/json", "Accept": 
 ## CHANGELOG
 
 ## vNext
+
+- TODO
+
+## 0.0.4 - 2025-02-05
 
 - Add `az apim api trace show` command
 - Add missing help text for commands
